@@ -1,0 +1,26 @@
+name: cm-429-fixer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    name: Go Lint and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.22
+      - name: Go Lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.60.1
+      - name: Go Test
+        run: go test -v ./...
