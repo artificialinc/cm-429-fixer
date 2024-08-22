@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"os"
 
 	"github.com/artificialinc/cm-429-fixer/pkg/cm"
@@ -24,6 +25,9 @@ func init() {
 }
 
 func main() {
+	k8sContext := flag.String("k8s-context", "", "Kubernetes context to use")
+	flag.Parse()
+
 	zapCfg := zap.NewProductionConfig()
 	level, err := zapcore.ParseLevel(logLevel)
 	if err != nil {
@@ -37,6 +41,7 @@ func main() {
 
 	watcher := cm.NewWatcher(
 		cm.WithLogger(zapr.NewLogger(logger).WithName("watcher")),
+		cm.WithClient(cm.GetLocalClient(&cm.ClientOpts{Context: *k8sContext})),
 	)
 
 	ctx := context.Background()

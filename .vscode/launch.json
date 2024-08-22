@@ -9,7 +9,11 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/cmd/fixer"
+            "program": "${workspaceFolder}/cmd/fixer",
+            "args": [
+                "-k8s-context",
+                "aidan-sandbox-aks-artificial-cluster",
+            ]
         }
     ]
 }

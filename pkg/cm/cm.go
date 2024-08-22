@@ -20,12 +20,22 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func getLocalClient() versioned.Interface {
+// ClientOpts is a set of options for the client
+type ClientOpts struct {
+	Context string
+}
+
+// GetLocalClient returns a client for the local cluster
+func GetLocalClient(opts *ClientOpts) versioned.Interface {
 	// Get kubeconfig
 	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
 	// if you want to change the loading rules (which files in which order), you can do so here
 
 	configOverrides := &clientcmd.ConfigOverrides{}
+
+	if opts != nil && opts.Context != "" {
+		configOverrides.CurrentContext = opts.Context
+	}
 
 	config := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, configOverrides)
 
@@ -103,7 +113,7 @@ func NewWatcher(opts ...Option) *Watcher {
 	}
 
 	if w.c == nil {
-		c := getLocalClient()
+		c := GetLocalClient(nil)
 		w.c = c
 	}
 
